@@ -50,8 +50,10 @@ pipeline {
                 docker { image "${buildBarImage}" }
             }
             steps {
-                echo "This is the build bar stage"
-                ls -all /opt/ibm/ace-12/ace
+                sh label: '', script: '''#!/bin/bash
+                    echo "This is the build bar stage"
+                    ls -all /opt/ibm/ace-12/ace
+                    '''
             }
         }
         stage('oc') {
@@ -59,8 +61,10 @@ pipeline {
                 docker { image "${ocImage}" }
             }
             steps {
-                echo "This is the oc stage"
-                which oc
+                sh label: '', script: '''#!/bin/bash
+                    echo "This is the oc stage"
+                    which oc
+                    '''
             }
         }
         stage('git') {
@@ -68,8 +72,10 @@ pipeline {
                 docker { image 'quay.io/ibmgaragecloud/alpine-git' }
             }
             steps {
-                echo "This is the git stage"
-                which git
+                sh label: '', script: '''#!/bin/bash
+                    echo "This is the git stage"
+                    which git
+                    '''
             }
         }
     }
