@@ -51,7 +51,7 @@ pipeline {
             }
             steps {
                 echo "This is the build bar stage"
-                ll -all /opt/ibm/ace-12/ace
+                ls -all /opt/ibm/ace-12/ace
             }
         }
         stage('oc') {
