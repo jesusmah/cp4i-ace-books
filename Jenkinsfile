@@ -51,6 +51,10 @@ pipeline {
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
+                    Xvfb -ac :99 &
+                    export DISPLAY=:99
+                    export LICENSE=accept
+                    pwd
                     echo "This is the build bar stage"
                     ls -all /opt/ibm/ace-12/ace
                     '''
