@@ -57,6 +57,7 @@ pipeline {
                 sh label: '', script: '''#!/bin/bash
                     echo "TEST TEST TEST"
                     echo ${TESTBUILD}
+                    printenv
                     Xvfb -ac :99 &
                     export DISPLAY=:99
                     export LICENSE=accept
