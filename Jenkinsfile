@@ -46,10 +46,13 @@ pipeline {
     agent none
     stages {
         stage('Build-Bar') {
+            environment {
+                TESTBUILD = "${buildBarImage}"
+            }
             agent {
                 docker {
                     image "${buildBarImage}"
-                    args '-e LICENSE=accept -e TESTBUILD=$buildBarImage --entrypoint=""'
+                    args '-e LICENSE=accept --entrypoint=""'
                     reuseNode true
                 }
             }
