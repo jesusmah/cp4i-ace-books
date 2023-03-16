@@ -50,6 +50,7 @@ pipeline {
                 docker {
                     image "${buildBarImage}"
                     args '-e LICENSE=accept --entrypoint=""'
+                    reuseNode true
                 }
             }
             steps {
@@ -67,6 +68,7 @@ pipeline {
             agent {
                 docker { image "${ocImage}"
                 args '--entrypoint=""'
+                reuseNode true
                 }
             }
             steps {
@@ -80,6 +82,7 @@ pipeline {
             agent {
                 docker { image 'quay.io/ibmgaragecloud/alpine-git'
                 args '--entrypoint=""'
+                reuseNode true
                 }
             }
             steps {
