@@ -65,7 +65,9 @@ pipeline {
         }
         stage('oc') {
             agent {
-                docker { image "${ocImage}" }
+                docker { image "${ocImage}"
+                args '--entrypoint=""'
+                }
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
@@ -76,7 +78,9 @@ pipeline {
         }
         stage('git') {
             agent {
-                docker { image 'quay.io/ibmgaragecloud/alpine-git' }
+                docker { image 'quay.io/ibmgaragecloud/alpine-git'
+                args '--entrypoint=""'
+                }
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
