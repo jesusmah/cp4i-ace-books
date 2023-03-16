@@ -49,12 +49,18 @@ pipeline {
             agent {
                 docker {
                     image "${buildBarImage}"
-                    args '-e LICENSE=accept --entrypoint=""'
+                    args '
+                        -e LICENSE=accept
+                        --entrypoint=""
+                        -e TESTBUILD=${buildBarImage}
+                        '
                     reuseNode true
                 }
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
+                    echo "TEST TEST TEST"
+                    echo ${TESTBUILD}
                     Xvfb -ac :99 &
                     export DISPLAY=:99
                     export LICENSE=accept
