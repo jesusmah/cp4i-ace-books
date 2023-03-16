@@ -47,7 +47,10 @@ pipeline {
     stages {
         stage('Build-Bar') {
             agent {
-                docker { image "${buildBarImage}" }
+                docker {
+                    image "${buildBarImage}"
+                    args '-e LICENSE=accept'
+                }
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
