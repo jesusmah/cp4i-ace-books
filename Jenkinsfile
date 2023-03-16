@@ -61,6 +61,8 @@ pipeline {
                     pwd
                     echo "This is the build bar stage"
                     ls -all /opt/ibm/ace-12/ace
+                    mkdir test-state
+                    touch test-state/test.txt
                     '''
             }
         }
@@ -75,6 +77,8 @@ pipeline {
                 sh label: '', script: '''#!/bin/bash
                     echo "This is the oc stage"
                     which oc
+                    ls -all
+                    ls -all test-state
                     '''
             }
         }
