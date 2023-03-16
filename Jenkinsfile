@@ -86,10 +86,10 @@ pipeline {
                 }
             }
             steps {
-                sh label: '', script: '''#!/bin/bash
-                    echo "This is the git stage"
-                    which git
-                    '''
+                sh '''#!/bin/bash
+                   echo "This is the git stage"
+                   which git
+                '''
             }
         }
     }
