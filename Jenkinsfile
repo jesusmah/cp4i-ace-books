@@ -86,10 +86,10 @@ pipeline {
                 }
             }
             steps {
-                sh '''#!/bin/bash
+                sh """
                    echo "This is the git stage"
                    which git
-                '''
+                """
             }
         }
     }
