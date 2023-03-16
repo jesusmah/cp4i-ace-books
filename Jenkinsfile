@@ -49,7 +49,7 @@ pipeline {
             agent {
                 docker {
                     image "${buildBarImage}"
-                    args '-e LICENSE=accept'
+                    args '-e LICENSE=accept --entrypoint=""'
                 }
             }
             steps {
