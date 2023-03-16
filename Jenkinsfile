@@ -49,7 +49,7 @@ pipeline {
             agent {
                 docker {
                     image "${buildBarImage}"
-                    args '-e LICENSE=accept -e TESTBUILD=${buildBarImage} --entrypoint=""'
+                    args '-e LICENSE=accept -e TESTBUILD=$buildBarImage --entrypoint=""'
                     reuseNode true
                 }
             }
