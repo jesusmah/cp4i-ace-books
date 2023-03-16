@@ -81,14 +81,15 @@ pipeline {
         stage('git') {
             agent {
                 docker { image 'quay.io/ibmgaragecloud/alpine-git'
+                args '--entrypoint=""'
                 reuseNode true
                 }
             }
             steps {
-                sh label: '', script: '''#!/bin/bash
-                    echo "This is the git stage"
-                    which git
-                    '''
+                sh """
+                   echo "This is the git stage"
+                   which git
+                """
             }
         }
     }
