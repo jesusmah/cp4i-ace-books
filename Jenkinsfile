@@ -50,6 +50,7 @@ pipeline {
                 }
             }
             steps {
+                cleanWs()
                 sh """
                     git clone $GIT_CP4I_DEVOPS_UTILS_REPO
                     git clone $GIT_APP_REPO
@@ -152,7 +153,7 @@ pipeline {
                         -e "s/{{REPLICAS}}/$REPLICAS/g" \
                         integration-server.yaml.tmpl > integration-server.yaml
                     cat integration-server.yaml
-                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR
+                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR --insecure-skip-tls-verify
                     oc apply -f integration-server.yaml
                     echo "Wait for integration server to be Ready"
                     oc wait --for=condition=Ready integrationserver/${SERVER_NAME} --timeout=120s -n ${NAMESPACE}
@@ -173,7 +174,7 @@ pipeline {
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
-                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR
+                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR --insecure-skip-tls-verify
                     HOSTNAME=$(oc get route -n ${NAMESPACE} ${SERVER_NAME}-http -ogo-template --template='{{.spec.host}}')
                     curl -k http://${HOSTNAME}/api/v1/${SERVER_NAME} | jq -r .
                 '''
