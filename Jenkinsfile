@@ -50,7 +50,6 @@ pipeline {
                 }
             }
             steps {
-                cleanWs()
                 sh """
                     git clone $GIT_CP4I_DEVOPS_UTILS_REPO
                     git clone $GIT_APP_REPO
@@ -178,6 +177,7 @@ pipeline {
                     HOSTNAME=$(oc get route -n ${NAMESPACE} ${SERVER_NAME}-http -ogo-template --template='{{.spec.host}}')
                     curl -k http://${HOSTNAME}/api/v1/${SERVER_NAME} | jq -r .
                 '''
+                cleanWs()
             }
         }
     }
