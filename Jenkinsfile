@@ -35,10 +35,10 @@ def artifactoryCredentials = "artifactory_credentials" // defined in Jenkins cre
 
 pipeline {
     agent none
-    options {
+    //options {
         // This is required if you want to clean before build
-        skipDefaultCheckout(true)
-    }
+        //skipDefaultCheckout(true)
+    //}
     stages {
         stage('Git Checkout') {
             environment {
@@ -55,10 +55,13 @@ pipeline {
             }
             steps {
                 // Clean before build
-                cleanWs()
+                //cleanWs()
                 // We need to explicitly checkout from SCM here
-                checkout scm
+                //checkout scm
                 sh """
+                    # Manual cleanup
+                    rm -rf $CP4I_DEVOPS_UTILS_DIR
+                    rm -rf $PROJECT_DIR
                     git clone $GIT_CP4I_DEVOPS_UTILS_REPO
                     git clone $GIT_APP_REPO
                     cp -p $CP4I_DEVOPS_UTILS_DIR/templates/integration-server.yaml.tmpl $PROJECT_DIR
