@@ -155,6 +155,7 @@ pipeline {
                     echo "Wait for integration server to be Ready"
                     oc wait --for=condition=Ready integrationserver/${SERVER_NAME} --timeout=120s -n ${NAMESPACE}
                     '''
+                }
             }
             stage('Unit Test') {
             environment {
