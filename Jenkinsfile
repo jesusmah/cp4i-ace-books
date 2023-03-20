@@ -35,6 +35,10 @@ def artifactoryCredentials = "artifactory_credentials" // defined in Jenkins cre
 
 pipeline {
     agent none
+    options {
+        // This is required if you want to clean before build
+        skipDefaultCheckout(true)
+    }
     stages {
         stage('Git Checkout') {
             environment {
@@ -50,6 +54,10 @@ pipeline {
                 }
             }
             steps {
+                // Clean before build
+                cleanWs()
+                // We need to explicitly checkout from SCM here
+                checkout scm
                 sh """
                     git clone $GIT_CP4I_DEVOPS_UTILS_REPO
                     git clone $GIT_APP_REPO
@@ -126,6 +134,7 @@ pipeline {
                 ACE_LICENSE = "${aceLicense}"
                 REPLICAS = "${replicas}"
                 OC_CREDS = credentials('oc-credentials')
+                KUBECONFIG = "/tmp/.kube/config"
             }
             agent {
                 docker { image "${ocImage}"
@@ -164,6 +173,7 @@ pipeline {
                 SERVER_NAME = "${serverName}"
                 NAMESPACE = "${namespace}"
                 OC_CREDS = credentials('oc-credentials')
+                KUBECONFIG = "/tmp/.kube/config"
             }
             agent {
                 docker { image "${ocImage}"
@@ -173,11 +183,9 @@ pipeline {
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
-                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR --insecure-skip-tls-verify
                     HOSTNAME=$(oc get route -n ${NAMESPACE} ${SERVER_NAME}-http -ogo-template --template='{{.spec.host}}')
                     curl -k http://${HOSTNAME}/api/v1/${SERVER_NAME} | jq -r .
                 '''
-                cleanWs()
             }
         }
     }
