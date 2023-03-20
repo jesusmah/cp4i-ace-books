@@ -22,7 +22,8 @@ def configurationList = ""
 // ACE integration server
 //def aceVersion = "12.0.5.0-r4"
 def aceVersion = "12.0.7.0-r4"
-def aceLicense = "L-KSBM-CJ2KWU"
+//def aceLicense = "L-KSBM-CJ2KWU"
+def aceLicense = "L-APEH-CJUCNR"
 def replicas = "1"
 
 // Artifactory configurations
