@@ -139,7 +139,6 @@ pipeline {
                 ACE_LICENSE = "${aceLicense}"
                 REPLICAS = "${replicas}"
                 OC_CREDS = credentials('oc-credentials')
-                KUBECONFIG = ".kube/config"
             }
             agent {
                 docker { image "${ocImage}"
@@ -149,6 +148,7 @@ pipeline {
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
+                    export KUBECONFIG=$WORKSPACE/.kube/config
                     set -e
                     cd $PROJECT_DIR
                     BAR_FILE="${BAR_NAME}_${BUILD_NUMBER}.bar"
@@ -178,7 +178,6 @@ pipeline {
                 SERVER_NAME = "${serverName}"
                 NAMESPACE = "${namespace}"
                 OC_CREDS = credentials('oc-credentials')
-                KUBECONFIG = ".kube/config"
             }
             agent {
                 docker { image "${ocImage}"
@@ -188,6 +187,7 @@ pipeline {
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
+                    export KUBECONFIG=$WORKSPACE/.kube/config
                     HOSTNAME=$(oc get route -n ${NAMESPACE} ${SERVER_NAME}-http -ogo-template --template='{{.spec.host}}')
                     curl -k http://${HOSTNAME}/api/v1/${SERVER_NAME} | jq -r .
                 '''
