@@ -125,6 +125,7 @@ pipeline {
                 ACE_VERSION = "${aceVersion}"
                 ACE_LICENSE = "${aceLicense}"
                 REPLICAS = "${replicas}"
+                OC_CREDS = credentials('oc-credentials')
             }
             agent {
                 docker { image "${ocImage}"
@@ -151,6 +152,7 @@ pipeline {
                         -e "s/{{REPLICAS}}/$REPLICAS/g" \
                         integration-server.yaml.tmpl > integration-server.yaml
                     cat integration-server.yaml
+                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR
                     oc apply -f integration-server.yaml
                     echo "Wait for integration server to be Ready"
                     oc wait --for=condition=Ready integrationserver/${SERVER_NAME} --timeout=120s -n ${NAMESPACE}
@@ -161,6 +163,7 @@ pipeline {
             environment {
                 SERVER_NAME = "${serverName}"
                 NAMESPACE = "${namespace}"
+                OC_CREDS = credentials('oc-credentials')
             }
             agent {
                 docker { image "${ocImage}"
@@ -170,6 +173,7 @@ pipeline {
             }
             steps {
                 sh label: '', script: '''#!/bin/bash
+                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR
                     HOSTNAME=$(oc get route -n ${NAMESPACE} ${SERVER_NAME}-http -ogo-template --template='{{.spec.host}}')
                     curl -k http://${HOSTNAME}/api/v1/${SERVER_NAME} | jq -r .
                 '''
