@@ -20,7 +20,8 @@ def namespace = "ace"
 def configurationList = ""
 
 // ACE integration server
-def aceVersion = "12.0.5.0-r4"
+//def aceVersion = "12.0.5.0-r4"
+def aceVersion = "12.0.7.0-r4"
 def aceLicense = "L-KSBM-CJ2KWU"
 def replicas = "1"
 
@@ -137,7 +138,7 @@ pipeline {
                 ACE_LICENSE = "${aceLicense}"
                 REPLICAS = "${replicas}"
                 OC_CREDS = credentials('oc-credentials')
-                KUBECONFIG = "/tmp/.kube/config"
+                KUBECONFIG = ".kube/config"
             }
             agent {
                 docker { image "${ocImage}"
@@ -176,7 +177,7 @@ pipeline {
                 SERVER_NAME = "${serverName}"
                 NAMESPACE = "${namespace}"
                 OC_CREDS = credentials('oc-credentials')
-                KUBECONFIG = "/tmp/.kube/config"
+                KUBECONFIG = ".kube/config"
             }
             agent {
                 docker { image "${ocImage}"
