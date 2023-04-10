@@ -172,6 +172,7 @@ EOF
                         # Create JSON file with Artifactory credentials and CA certificate
                         oc extract secret/artifactory-access -n ${ARTIFACTORY_NAMESPACE}
                         ARTIFACTORY_PASSWORD=`cat ARTIFACTORY_PASSWORD | sed 's/"/\\"/g'`
+                        echo "THIS IS THE PASSWORD XXXXXXXXX --> $ARTIFACTORY_PASSWORD"
                         cat - > bar-auth.json << EOF
                         {
                             "authType":"BASIC_AUTH",
