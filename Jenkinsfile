@@ -27,7 +27,7 @@ def aceLicense = "L-APEH-CJUCNR"
 def replicas = "1"
 
 // Artifactory configurations
-def artifactoryHost = "artifactory-tools.itzroks-66700099q7-056diz-6ccd7f378ae819553d37d5f2ee142bd6-0000.us-east.containers.appdomain.cloud"
+def artifactoryHost = "artifactory-tools.itzroks-66700099q7-3fe93l-6ccd7f378ae819553d37d5f2ee142bd6-0000.us-east.containers.appdomain.cloud"
 def artifactoryPort = "443"
 def artifactoryRepo = "generic-local"
 def artifactoryBasePath = "cp4i"
