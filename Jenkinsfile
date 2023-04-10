@@ -16,7 +16,7 @@ def utilsDir = "cp4i-devops-utils"
 
 // Params for Deploy Bar Stage
 def serverName = "books"
-def namespace = "ace"
+def namespace = "ace-jenkins"
 def configurationList = ""
 
 // ACE integration server
