@@ -32,6 +32,7 @@ def artifactoryPort = "443"
 def artifactoryRepo = "generic-local"
 def artifactoryBasePath = "cp4i"
 def artifactoryCredentials = "artifactory_credentials" // defined in Jenkins credentials
+def artifactoryNamespace = "tools"
 
 
 
@@ -123,6 +124,85 @@ pipeline {
                     ./upload-barfile-to-artifactory.sh ${ARTIFACTORY_HOST} ${ARTIFACTORY_REPO} ${ARTIFACTORY_BASE_PATH} "${BAR_NAME}_${BUILD_NUMBER}.bar" ${ARTIFACTORY_CREDS_USR} ${ARTIFACTORY_CREDS_PSW}
                     '''
             }
+        }
+        stage('ACE BarAuth') {
+            environment {
+                PROJECT_DIR = "${projectDir}"
+                NAMESPACE = "${namespace}"
+                ARTIFACTORY_NAMESPACE = "${artifactoryNamespace}"
+            }
+            agent {
+                docker { image "${ocImage}"
+                args '--entrypoint=""'
+                reuseNode true
+                }
+            }
+            steps {
+                sh label: '', script: '''#!/bin/bash
+                    export KUBECONFIG=$WORKSPACE/.kube/config
+                    set -e
+                    cd $PROJECT_DIR
+                    echo "Check if bar-auth-config ACE Configuration exists"
+                    EXISTS=`oc get configuration.appconnect.ibm.com -n ${NAMESPACE} | grep bar-auth-config | wc -l`
+                    if [[ $EXISTS -eq 1 ]]
+                    then
+                        echo "bar-auth-config ACE Configuration exists"
+                    else
+                        echo "bar-auth-config ACE Configuration does not exists"
+                        echo "Installing openssl"
+                        dnf install openssl -y
+                        echo "openssl installed"
+        
+                        echo "Getting CA certificate for Artifactory"
+                        ARTIFACTORY_ENDPOINT=`oc get route artifactory -n ${ARTIFACTORY_NAMESPACE} -o jsonpath='{.status.ingress[].host}'`
+                        # Get certificates from artifactory endpoint
+                        openssl s_client -showcerts -verify 5 -connect ${ARTIFACTORY_ENDPOINT}:443 < /dev/null | awk '/BEGIN CERTIFICATE/,/END CERTIFICATE/{ if(/BEGIN CERTIFICATE/){a++}; out="cert"a".pem"; print >out}'
+                        # Base64 encode CA certificate
+                        CA_ENCODED=`cat cert1.pem | base64 -w0`
+                        # Create the secret
+                        cat <<EOF | oc apply -f -
+                        kind: Secret
+                        apiVersion: v1
+                        metadata:
+                            name: artifactory-cacert-secret
+                            namespace: ${NAMESPACE}
+                        data:
+                            ca.crt: '${CA_ENCODED}'
+                            tls.crt: ''
+                            tls.key: ''
+                        type: kubernetes.io/tls
+                    EOF
+        
+                        # Create JSON file with Artifactory credentials and CA certificate
+                        oc extract secret/artifactory-access -n ${ARTIFACTORY_NAMESPACE}
+                        ARTIFACTORY_PASSWORD=`cat ARTIFACTORY_PASSWORD`
+                        cat - > bar-auth.json << EOF
+                        {
+                            "authType":"BASIC_AUTH",
+                            "credentials": {
+                                "username":"admin",
+                                "password":"${ARTIFACTORY_PASSWORD}",
+                                "caCertSecret":"artifactory-cacert-secret"
+                            }
+                        }
+                    EOF
+          
+                        # Create the secret containing the JSON
+                        oc create secret generic bar-auth-secret --from-file=configuration=bar-auth.json --namespace=${NAMESPACE}
+                        cat <<EOF | oc apply -f -
+                        apiVersion: appconnect.ibm.com/v1beta1
+                        kind: Configuration
+                        metadata:  
+                            name: bar-auth-config  
+                            namespace: ${NAMESPACE}
+                        spec:  
+                            description: Stores bar auth
+                            secretName: bar-auth-secret
+                            type: barauth
+                    EOF
+                    fi
+                    '''
+                }
         }
         stage('Deploy Intergration Server') {
             environment {
