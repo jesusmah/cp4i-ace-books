@@ -1,7 +1,6 @@
 // Image variables
 def buildBarImage = "localhost/ace-buildbar:12.0.4.0-ubuntu"
-def ocImage = "localhost/oc-deploy:4.10.54"
-def openshiftOriginImage = "quay.io/openshift/origin-cli:latest"
+def ocImage = "localhost/oc-deploy:4.10.54-v2"
 def gitImage = "quay.io/ibmgaragecloud/alpine-git"
 
 // Params for Git Checkout-Stage
@@ -133,7 +132,7 @@ pipeline {
                 ARTIFACTORY_NAMESPACE = "${artifactoryNamespace}"
             }
             agent {
-                docker { image "${openshiftOriginImage}"
+                docker { image "${ocImage}"
                 args '--entrypoint=""'
                 reuseNode true
                 }
@@ -150,10 +149,6 @@ pipeline {
                         echo "bar-auth-config ACE Configuration exists"
                     else
                         echo "bar-auth-config ACE Configuration does not exists"
-                        echo "Installing openssl"
-                        dnf install openssl -y
-                        echo "openssl installed"
-        
                         echo "Getting CA certificate for Artifactory"
                         ARTIFACTORY_ENDPOINT=`oc get route artifactory -n ${ARTIFACTORY_NAMESPACE} -o jsonpath='{.status.ingress[].host}'`
                         # Get certificates from artifactory endpoint
