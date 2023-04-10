@@ -1,6 +1,7 @@
 // Image variables
 def buildBarImage = "localhost/ace-buildbar:12.0.4.0-ubuntu"
 def ocImage = "localhost/oc-deploy:4.10.54"
+def openshiftOriginImage = "quay.io/openshift/origin-cli:latest"
 def gitImage = "quay.io/ibmgaragecloud/alpine-git"
 
 // Params for Git Checkout-Stage
@@ -132,7 +133,7 @@ pipeline {
                 ARTIFACTORY_NAMESPACE = "${artifactoryNamespace}"
             }
             agent {
-                docker { image "${ocImage}"
+                docker { image "${openshiftOriginImage}"
                 args '--entrypoint=""'
                 reuseNode true
                 }
