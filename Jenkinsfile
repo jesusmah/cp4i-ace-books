@@ -171,7 +171,7 @@ pipeline {
                             tls.crt: ''
                             tls.key: ''
                         type: kubernetes.io/tls
-                    EOF
+EOF
         
                         # Create JSON file with Artifactory credentials and CA certificate
                         oc extract secret/artifactory-access -n ${ARTIFACTORY_NAMESPACE}
@@ -185,7 +185,7 @@ pipeline {
                                 "caCertSecret":"artifactory-cacert-secret"
                             }
                         }
-                    EOF
+EOF
           
                         # Create the secret containing the JSON
                         oc create secret generic bar-auth-secret --from-file=configuration=bar-auth.json --namespace=${NAMESPACE}
@@ -199,7 +199,7 @@ pipeline {
                             description: Stores bar auth
                             secretName: bar-auth-secret
                             type: barauth
-                    EOF
+EOF
                     fi
                     '''
                 }
