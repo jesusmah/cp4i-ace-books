@@ -44,10 +44,6 @@ public class Book {
 		book3.addFormat("Audiobook CD");
 		book3.addFormat("Audible");
 		addBook(book3);
-
-		Book book4 = new Book("TEST", "1419703846", "Bryant Austin, Sylvia Earle", "English", new GregorianCalendar(2013, 4, 2).getTime());
-		book4.addFormat("Hardcover");
-		addBook(book4);
 	}
 	
 	public Book() {
