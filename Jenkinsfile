@@ -30,7 +30,7 @@ def replicas = "1"
 def artifactoryHost = "artifactory-tools.itzroks-66700099q7-3fe93l-6ccd7f378ae819553d37d5f2ee142bd6-0000.us-east.containers.appdomain.cloud"
 def artifactoryPort = "443"
 def artifactoryRepo = "generic-local"
-def artifactoryBasePath = "cp4i"
+def artifactoryBasePath = "jenkins"
 def artifactoryCredentials = "artifactory_credentials" // defined in Jenkins credentials
 def artifactoryNamespace = "tools"
 
@@ -177,7 +177,7 @@ EOF
                             "authType":"BASIC_AUTH",
                             "credentials": {
                                 "username":"admin",
-                                "password":'${ARTIFACTORY_PASSWORD}',
+                                "password":"${ARTIFACTORY_PASSWORD}",
                                 "caCertSecret":"artifactory-cacert-secret"
                             }
                         }
