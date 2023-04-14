@@ -140,6 +140,7 @@ pipeline {
             steps {
                 sh label: '', script: '''#!/bin/bash
                     export KUBECONFIG=$WORKSPACE/.kube/config
+                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR --insecure-skip-tls-verify
                     set -e
                     cd $PROJECT_DIR
                     echo "Check if bar-auth-config ACE Configuration exists"
@@ -242,7 +243,7 @@ EOF
                         -e "s/{{REPLICAS}}/$REPLICAS/g" \
                         integration-server.yaml.tmpl > integration-server.yaml
                     cat integration-server.yaml
-                    oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR --insecure-skip-tls-verify
+                    # oc login --token=$OC_CREDS_PSW --server=$OC_CREDS_USR --insecure-skip-tls-verify
                     oc apply -f integration-server.yaml
                     echo "Wait for integration server to be Ready"
                     oc wait --for=condition=Ready integrationserver/${SERVER_NAME} --timeout=120s -n ${NAMESPACE}
