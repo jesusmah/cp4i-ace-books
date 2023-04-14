@@ -130,6 +130,7 @@ pipeline {
                 PROJECT_DIR = "${projectDir}"
                 NAMESPACE = "${namespace}"
                 ARTIFACTORY_NAMESPACE = "${artifactoryNamespace}"
+                OC_CREDS = credentials('oc-credentials')
             }
             agent {
                 docker { image "${ocImage}"
